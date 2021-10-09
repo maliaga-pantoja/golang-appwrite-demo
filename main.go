@@ -1,36 +1,47 @@
 package main
 
 import (
-	Database "github.com/maliaga-pantoja/golang-appwrite-demo/src/database"
+	Collection "github.com/maliaga-pantoja/golang-appwrite-demo/src/database/collection"
+	Document "github.com/maliaga-pantoja/golang-appwrite-demo/src/database/document"
 	Util "github.com/maliaga-pantoja/golang-appwrite-demo/src/util"
 )
 
+var collection Collection.CollectionEntity
+var document Document.DocumentEntity
+
+func init() {
+	// -- initializen vars
+	collection.Init()
+}
 func main() {
-	v := Database.CollectionEntity{}
-	v.Init()
+
 	// ---------
-	input := createCollectionInput("demo2Collection")
-	createResult := v.CreateCollection(input)
-	Util.Present{}.CreateCollection(createResult)
+	collectionInput := createCollectionInput("demo7Collection")
+	createCollectionResult := collection.CreateCollection(collectionInput)
+	Util.Present{}.CreateCollection(createCollectionResult)
 	// ----------
-	collections := v.GetCollections()
+	collections := collection.GetCollections()
 	Util.Present{}.ListCollections(collections)
 	// ----------
+	collectionLen := len(collections.Collections) - 1
+	document.Init(collections.Collections[collectionLen].Id)
+	createDocumentResult := document.CreateDocument(`{"data": {"key2": "value4"} }`)
+	Util.Present{}.CreateDocument(createDocumentResult)
 }
 
-func createCollectionInput(collectionName string) Database.CollectionCreateInput {
-	inputRule := Database.CollectionCreateInputRule{
+func createCollectionInput(collectionName string) Collection.CollectionCreateInput {
+	inputRule := Collection.CollectionCreateInputRule{
 		Label:    "label",
-		Key:      "key",
+		Key:      "key2",
 		Type:     "text",
 		Default:  "no set",
 		Required: false,
 		Array:    false,
 	}
-	var ruleGroup []Database.CollectionCreateInputRule
+	var ruleGroup []Collection.CollectionCreateInputRule
 	ruleGroup = append(ruleGroup, inputRule)
 
-	collectionInput := Database.CollectionCreateInput{
+	collectionInput := Collection.CollectionCreateInput{
 		Name:  collectionName,
 		Read:  []string{"*"},
 		Write: []string{"*"},

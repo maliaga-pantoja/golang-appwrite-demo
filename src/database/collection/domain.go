@@ -1,4 +1,4 @@
-package database
+package collection
 
 // -----------Inputs for create collections -----------
 type CollectionCreateInputRule struct {
